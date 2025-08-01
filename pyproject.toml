@@ -1,6 +1,6 @@
 [project]
 name = "dmxfy"
-version = "0.3.0"
+version = "0.4.0"
 description = "大语言模型翻译器终端"
 readme = "README.md"
 authors = [
@@ -8,8 +8,6 @@ authors = [
 ]
 requires-python = ">=3.11"
 dependencies = [
-    "loguru>=0.7.3",
-    "openai>=1.98.0",
     "prompt-toolkit>=3.0.51",
 ]
 

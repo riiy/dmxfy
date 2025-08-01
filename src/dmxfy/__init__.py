@@ -1,16 +1,13 @@
+import http.client
+import json
 import os
 
-from openai import OpenAI
 from prompt_toolkit import PromptSession
 
-# 初始化 OpenAI 客户端
-client = OpenAI(
-    api_key=os.environ[
-        "OPENAI_API_KEY"
-    ],  # 请确保已设置环境变量，或直接填入你的 API Key
-    base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
-)
-
+headers = {
+    "Authorization": "Bearer " + os.getenv("OPENAI_API_KEY", ""),
+    "Content-Type": "application/json",
+}
 # 支持的语言选项
 LANGUAGES = {
     "自动检测": "auto",
@@ -109,32 +106,39 @@ LANGUAGES = {
 }
 
 
-def translate_text(text, source_lang, target_lang):
+def translate_text(text: str, source_lang: str, target_lang: str) -> str:
     """
     调用阿里云百炼的翻译模型进行翻译
     """
     if not text.strip():
         return "请输入要翻译的文本"
 
-    # 构造消息内容
-    messages = [{"role": "user", "content": text}]
-
-    # 构造翻译选项
-    translation_options = {
-        "source_lang": LANGUAGES.get(source_lang, "auto"),
-        "target_lang": LANGUAGES.get(target_lang, "English"),
-    }
-
     try:
         # 调用模型
-        completion = client.chat.completions.create(
-            model="qwen-mt-turbo",
-            messages=messages,
-            stream=False,
-            max_tokens=2048,
-            extra_body={"translation_options": translation_options},
+        conn = http.client.HTTPSConnection("dashscope.aliyuncs.com")
+        json_data = {
+            "model": "qwen-mt-turbo",
+            "messages": [
+                {
+                    "role": "user",
+                    "content": text,
+                },
+            ],
+            "translation_options": {
+                "source_lang": LANGUAGES.get(source_lang, "auto"),
+                "target_lang": LANGUAGES.get(target_lang, "English"),
+            },
+        }
+        conn.request(
+            "POST",
+            "/compatible-mode/v1/chat/completions",
+            json.dumps(json_data),
+            headers,
         )
-        return completion.choices[0].message.content
+        response = conn.getresponse()
+        resp_str = response.read().decode("utf-8")
+        resp_json = json.loads(resp_str)
+        return resp_json["choices"][0]["message"]["content"]
     except Exception as e:
         return f"翻译出错: {str(e)}"
 
