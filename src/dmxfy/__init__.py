@@ -2,8 +2,6 @@ import http.client
 import json
 import os
 
-from prompt_toolkit import PromptSession
-
 headers = {
     "Authorization": "Bearer " + os.getenv("OPENAI_API_KEY", ""),
     "Content-Type": "application/json",
@@ -144,14 +142,12 @@ def translate_text(text: str, source_lang: str, target_lang: str) -> str:
 
 
 def main():
-    session = PromptSession()
-
     target_lang = "英语"
     source_lang = "简体中文"
     prompt_str = "汉译英> "
     while True:
         try:
-            text: str = session.prompt(prompt_str)
+            text: str = input(prompt_str)
         except KeyboardInterrupt:
             continue
         except EOFError:

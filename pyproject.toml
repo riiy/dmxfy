@@ -1,15 +1,13 @@
 [project]
 name = "dmxfy"
-version = "0.4.0"
+version = "0.5.0"
 description = "大语言模型翻译器终端"
 readme = "README.md"
 authors = [
     { name = "zhou bo", email = "wokspc@gmail.com" }
 ]
 requires-python = ">=3.11"
-dependencies = [
-    "prompt-toolkit>=3.0.51",
-]
+dependencies = []
 
 [project.scripts]
 dmxfy = "dmxfy:main"
