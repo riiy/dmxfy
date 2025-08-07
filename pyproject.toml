@@ -4,7 +4,7 @@ version = "0.5.0"
 description = "大语言模型翻译器终端"
 readme = "README.md"
 authors = [
-    { name = "zhou bo", email = "wokspc@gmail.com" }
+    { name = "workspc", email = "wokspc@gmail.com" }
 ]
 requires-python = ">=3.11"
 dependencies = []
