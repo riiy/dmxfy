@@ -3,7 +3,7 @@ import json
 import os
 
 headers = {
-    "Authorization": "Bearer " + os.getenv("OPENAI_API_KEY", ""),
+    "Authorization": "Bearer " + os.getenv("DMXFY_API_KEY", ""),
     "Content-Type": "application/json",
 }
 # 支持的语言选项
