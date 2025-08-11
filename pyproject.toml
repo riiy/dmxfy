@@ -7,10 +7,18 @@ authors = [
     { name = "workspc", email = "wokspc@gmail.com" }
 ]
 requires-python = ">=3.11"
-dependencies = []
+dependencies = [
+    "pytest-cov>=6.2.1",
+]
 
 [project.scripts]
 dmxfy = "dmxfy:main"
+
+[project.optional-dependencies]
+test = [
+    "pytest>=7.4.3,<8.0.0",
+    "pytest-cov>=4.1.0",
+]
 
 [build-system]
 requires = ["hatchling"]
@@ -28,12 +36,25 @@ dev = [
     "coverage<8.0.0,>=7.4.3",
     "types-requests",
 ]
+
 [tool.uv]
 index-url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+addopts = [
+    "--cov=src/dmxfy",
+    "--cov-report=html",
+    "--cov-report=term-missing",
+    "--verbose"
+]
+
 [tool.mypy]
 strict = true
-exclude = ["venv", ".venv", "alembic"]
+exclude = ["venv", ".venv", "alembic", "tests"]
 ignore_missing_imports = true
 disallow_incomplete_defs = true
 no_implicit_optional = true
@@ -44,7 +65,7 @@ check_untyped_defs = true
 
 [tool.ruff]
 target-version = "py310"
-exclude = ["alembic"]
+exclude = ["alembic", "tests"]
 
 [tool.ruff.lint]
 select = [
