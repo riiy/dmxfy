@@ -1,5 +1,10 @@
+import os
 import sys
-from typing import NoReturn
+from typing import Any, NoReturn
+
+from prompt_toolkit import PromptSession
+from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+from prompt_toolkit.history import FileHistory
 
 from dmxfy.client.client import TranslationClient
 from dmxfy.exceptions.exceptions import DMXFYException
@@ -14,21 +19,33 @@ class CLI:
         self.source_lang = "简体中文"
         self.prompt_str = "汉译英> "
 
+        # Create history file path in user's home directory
+        history_file = os.path.expanduser("~/.dmxfy_history")
+
+        # Create prompt session with history
+        self.session: PromptSession[Any] = PromptSession(
+            history=FileHistory(history_file),
+            auto_suggest=AutoSuggestFromHistory(),
+            enable_history_search=True,
+        )
+
     def run(self) -> NoReturn:
         """Run the CLI interface"""
         print("Welcome to DMXFY - 大语言模型翻译器")
         print("Type '\\e' to switch to English-to-Chinese translation")
         print("Type '\\c' to switch to Chinese-to-English translation")
-        print("Press Ctrl+C to exit")
+        print("Press Ctrl+C or Ctrl+D to exit")
+        print("Use Up/Down arrow keys to navigate history")
+        print("Use Ctrl+R for reverse history search")
 
         while True:
             try:
-                text = input(self.prompt_str)
+                text = self.session.prompt(self.prompt_str)
             except KeyboardInterrupt:
                 print("\nGoodbye!")
                 sys.exit(0)
             except EOFError:
-                print("Goodbye!")
+                print("\nGoodbye!")
                 sys.exit(0)
 
             if text.startswith("\\e"):
@@ -54,6 +71,9 @@ class CLI:
 
     def _translate(self, text: str) -> None:
         """Translate text and print the result"""
+        if not text.strip():
+            return
+
         try:
             result = self.client.translate(
                 text, source_lang=self.source_lang, target_lang=self.target_lang

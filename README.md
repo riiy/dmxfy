@@ -4,9 +4,11 @@ DMXFY is a terminal-based translation tool powered by Alibaba Cloud's Qwen-MT-Tu
 
 ## Features
 
-- Interactive terminal interface
+- Interactive terminal interface with history support
 - Support for 40+ languages
 - Switch between translation directions (Chinese to English / English to Chinese)
+- Command history with up/down arrow navigation
+- Reverse history search with Ctrl+R
 - Powered by Alibaba Cloud's Qwen-MT-Turbo model
 
 ## Installation
