@@ -1,6 +1,6 @@
 [project]
 name = "dmxfy"
-version = "0.5.6"
+version = "0.6.0"
 description = "大语言模型翻译器终端"
 readme = "README.md"
 authors = [
